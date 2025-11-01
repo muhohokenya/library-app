@@ -42,6 +42,24 @@ class BooksTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('shelf_location')
+                    ->label('Location')
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('book_status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'available' => 'success',
+                        'issued' => 'info',
+                        'missing' => 'danger',
+                        'damaged' => 'warning',
+                        default => 'gray',
+                    }),
+
+
             ])
             ->filters([
                 //

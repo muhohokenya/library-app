@@ -13,11 +13,13 @@ class Book extends Model
         'title',
         'author',
         'isbn',
+        'shelf_location',  // Add this
         'description',
         'quantity',
         'available_quantity',
         'publisher',
         'published_year',
+        'book_status',  // Add this
     ];
 
     public function issues()
