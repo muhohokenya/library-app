@@ -1,4 +1,4 @@
-name: Deploy MediCareer App to Prod
+name: Deploy Library app on MediCareer domain
 on:
   push:
     branches: [main]
