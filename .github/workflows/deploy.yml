@@ -1,0 +1,47 @@
+name: Deploy MediCareer App to Prod
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Zip project contents (excluding unnecessary files)
+        run: |
+          zip -r app.zip . -x \
+            "vendor/**" \
+            "node_modules/**" \
+            ".git/**" \
+            ".github/**" \
+            "tests/**" \
+            "*.md" \
+            "database/**" \
+            ".env"
+
+      - name: Upload zipped contents via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{secrets.FTP_HOST}}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          server-dir: /domains/library.medicareers.co.ke/
+
+      - name: Move assets to public_html directory via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{secrets.FTP_HOST}}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          local-dir: public/
+          server-dir: /domains/library.medicareers.co.ke/public_html/
+
