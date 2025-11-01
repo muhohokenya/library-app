@@ -30,5 +30,4 @@ jobs:
             **/vendor/**
             **/tests/**
             **/*.md
-            **/database/**
             .env
