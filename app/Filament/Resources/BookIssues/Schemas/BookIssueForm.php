@@ -35,14 +35,12 @@ class BookIssueForm
                     ->required()
                     ->default(now())
                     ->minDate(now()->startOfDay())
-                    ->readOnly()
-                    ->disabled()
                     ->native(false),
 
                 DatePicker::make('due_date')
                     ->required()
                     ->default(now()->addDays(14))
-                    ->minDate(now())
+                    ->minDate(now()->startOfDay())
                     ->native(false),
 
                 DatePicker::make('return_date')
