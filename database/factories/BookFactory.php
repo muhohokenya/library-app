@@ -37,7 +37,7 @@ class BookFactory extends Factory
             'publisher' => $this->faker->company(),
             'published_year' => $this->faker->year(),
             'quantity' => $quantity,
-            'available_quantity' => $quantity - $issued,
+            'available_quantity' => $quantity,
         ];
     }
 }
