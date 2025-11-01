@@ -8,7 +8,7 @@ class BookFactory extends Factory
 {
     public function definition(): array
     {
-        $quantity = $this->faker->numberBetween(1, 100);
+        $quantity = $this->faker->numberBetween(1, 100); //sample books
         $issued = $this->faker->numberBetween(0, min(20, $quantity));
 
         $bookTitles = [
