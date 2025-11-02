@@ -17,8 +17,6 @@ class CheckOverdueBooks extends Command
     {
         $this->info('Checking for overdue books...');
 
-        Log::write("info","Test Cron Job");
-
         // Get all issued books that are past due date by 24+ hours
         $overdueIssues = BookIssue::where('status', 'issued')
             ->whereDate('due_date', '<', Carbon::now()->subDay())
@@ -31,7 +29,7 @@ class CheckOverdueBooks extends Command
             $daysOverdue = Carbon::parse($issue->due_date)->diffInDays(Carbon::now());
             $fineAmount = $daysOverdue * 10; // KES 10 per day
 
-            Fine::create([
+            Fine::query()->create([
                 'book_issue_id' => $issue->id,
                 'member_id' => $issue->member_id,
                 'amount' => $fineAmount,
@@ -39,10 +37,10 @@ class CheckOverdueBooks extends Command
             ]);
 
             $finesCreated++;
-            $this->info("Fine created for Issue #{$issue->id} - KES {$fineAmount}");
+            Log::write("info","Fine created for Issue". $issue->id." - KES ".$fineAmount);
         }
 
-        $this->info("Total fines created: {$finesCreated}");
+        Log::write("info","Total fines created: {$finesCreated}");
 
         return 0;
     }
