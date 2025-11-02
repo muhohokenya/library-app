@@ -12,37 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, dom, filter, gd, json, zip
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install NPM dependencies and build assets
-        run: |
-          npm ci
-          npm run build
-
-      - name: Create .htaccess for Laravel
-        run: |
-          if [ ! -f public/.htaccess ]; then
-            cat > public/.htaccess << 'EOF'
-          <IfModule mod_rewrite.c>
-              RewriteEngine On
-              RewriteRule ^(.*)$ index.php/$1 [L]
-          </IfModule>
-          EOF
-          fi
-
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -54,16 +23,11 @@ jobs:
           server-dir: /domains/library.medicareers.co.ke/
           timeout: 600000
           log-level: verbose
-          dangerous-clean-slate: false
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/vendor/**
             **/tests/**
             **/*.md
             .env
-            .env.example
-            .gitignore
-            .gitattributes
-            phpunit.xml
-            README.md
