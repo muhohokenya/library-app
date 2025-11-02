@@ -37,7 +37,7 @@ class BookFactory extends Factory
         return [
             'title' => $this->faker->randomElement($bookTitles) . ' - ' . $this->faker->word(),
             'author' => $this->faker->name(),
-            'location' => $location,
+            'shelf_location' => $location,
             'isbn' => $this->faker->unique()->isbn13(),
             'description' => $this->faker->paragraph(3),
             'publisher' => $this->faker->company(),
