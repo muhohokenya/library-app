@@ -3,9 +3,12 @@
 namespace App\Filament\Resources\BookIssues\Pages;
 
 use App\Filament\Resources\BookIssues\BookIssueResource;
+use App\Models\Fine;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Notifications\Notification;
+use Carbon\Carbon;
 
 class EditBookIssue extends EditRecord
 {
@@ -21,26 +24,19 @@ class EditBookIssue extends EditRecord
 
     protected function afterSave(): void
     {
-        // Check if status changed
-        if ($this->record->wasChanged('status')) {
-            $oldStatus = $this->record->getOriginal('status');
-            $newStatus = $this->record->status;
+        if ($this->record->status === 'returned' && !$this->record->fine) {
+            $dueDate = \Carbon\Carbon::parse($this->record->due_date);
+            $returnDate = \Carbon\Carbon::parse($this->record->return_date ?? now());
 
-            // If book was just returned
-            if ($oldStatus === 'issued' && $newStatus === 'returned') {
-                // Increase available quantity
-                $this->record->book->increment('available_quantity');
+            if ($returnDate->gt($dueDate)) {
+                $daysLate = $dueDate->diffInDays($returnDate);
 
-                // Set return date if not already set
-                if (!$this->record->return_date) {
-                    $this->record->update(['return_date' => now()]);
-                }
-
-                Notification::make()
-                    ->success()
-                    ->title('Book Returned')
-                    ->body('Available quantity has been updated.')
-                    ->send();
+                \App\Models\Fine::create([
+                    'book_issue_id' => $this->record->id,
+                    'member_id' => $this->record->member_id,
+                    'amount' => $daysLate * 10,
+                    'days_overdue' => $daysLate,
+                ]);
             }
         }
     }

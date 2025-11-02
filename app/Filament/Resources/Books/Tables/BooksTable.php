@@ -18,19 +18,23 @@ class BooksTable
                 TextColumn::make('title')
                     ->searchable(),
                 TextColumn::make('author')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('isbn')
                     ->searchable(),
                 TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
+
                 TextColumn::make('available_quantity')
                     ->numeric()
                     ->sortable(),
+
                 TextColumn::make('publisher')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
+
                 TextColumn::make('published_year')
-                    ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -38,6 +42,7 @@ class BooksTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

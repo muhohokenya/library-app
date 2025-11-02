@@ -18,6 +18,22 @@ class Member extends Model
         'member_type',
     ];
 
+    public function fines()
+    {
+        return $this->hasMany(Fine::class);
+    }
+
+    public function unpaidFines()
+    {
+        return $this->fines()->whereIn('status', ['unpaid', 'partial']);
+    }
+
+    public function totalUnpaidFines()
+    {
+        return $this->unpaidFines()->sum('balance');
+    }
+
+
     // Auto-generate member ID before creating
     protected static function boot()
     {

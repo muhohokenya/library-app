@@ -44,4 +44,10 @@ class BookIssue extends Model
         }
         return Carbon::parse($this->due_date)->isPast();
     }
+
+
+    public function fine()
+    {
+        return $this->hasOne(Fine::class);
+    }
 }
