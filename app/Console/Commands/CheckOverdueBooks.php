@@ -6,6 +6,7 @@ use App\Models\BookIssue;
 use App\Models\Fine;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CheckOverdueBooks extends Command
 {
@@ -15,6 +16,8 @@ class CheckOverdueBooks extends Command
     public function handle(): int
     {
         $this->info('Checking for overdue books...');
+
+        Log::write("info","Test Cron Job");
 
         // Get all issued books that are past due date by 24+ hours
         $overdueIssues = BookIssue::where('status', 'issued')
