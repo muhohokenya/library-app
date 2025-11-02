@@ -29,9 +29,15 @@ class BookFactory extends Factory
             'War and Peace',
         ];
 
+        // Generate random location from A1 to Z9
+        $letter = chr($this->faker->numberBetween(65, 90)); // A-Z (ASCII 65-90)
+        $number = $this->faker->numberBetween(1, 9);
+        $location = $letter . $number;
+
         return [
             'title' => $this->faker->randomElement($bookTitles) . ' - ' . $this->faker->word(),
             'author' => $this->faker->name(),
+            'location' => $location,
             'isbn' => $this->faker->unique()->isbn13(),
             'description' => $this->faker->paragraph(3),
             'publisher' => $this->faker->company(),
