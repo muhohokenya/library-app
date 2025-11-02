@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
     {
         // Run role seeder first
         $this->call(RoleSeeder::class);
+        $this->call(MemberSeeder::class);
+        $this->call(BookSeeder::class);
 
         // Create admin user
         $admin = User::query()->create([
