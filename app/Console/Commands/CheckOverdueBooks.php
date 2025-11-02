@@ -40,7 +40,9 @@ class CheckOverdueBooks extends Command
             Log::write("info","Fine created for Issue". $issue->id." - KES ".$fineAmount);
         }
 
-        Log::write("info","Total fines created: {$finesCreated}");
+        if ($finesCreated !== 0) {
+            Log::write("info","Total fines created: {$finesCreated}");
+        }
 
         return 0;
     }
