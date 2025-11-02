@@ -9,14 +9,16 @@ class Member extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'member_id',
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'member_type',
-    ];
+    protected $guarded = [];
+
+//    protected $fillable = [
+//        'member_id',
+//        'first_name',
+//        'last_name',
+//        'email',
+//        'phone',
+//        'member_type',
+//    ];
 
     public function fines()
     {

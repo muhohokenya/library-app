@@ -18,7 +18,7 @@ class CheckOverdueBooks extends Command
         $this->info('Checking for overdue books...');
 
         // Get all issued books that are past due date by 24+ hours
-        $overdueIssues = BookIssue::where('status', 'issued')
+        $overdueIssues = BookIssue::query()->where('status', 'issued')
             ->whereDate('due_date', '<', Carbon::now()->subDay())
             ->whereDoesntHave('fine') // Only books without existing fines
             ->get();
