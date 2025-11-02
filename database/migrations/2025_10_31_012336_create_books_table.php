@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('author');
             $table->string('isbn')->unique();
-            $table->string('shelf_location')->nullable()->after('isbn');
+            $table->string('shelf_location')->nullable();
             $table->enum('book_status', ['available', 'issued', 'missing', 'damaged'])->default('available')->after('available_quantity');
             $table->text('description')->nullable();
             $table->integer('quantity');
