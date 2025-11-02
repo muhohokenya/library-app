@@ -94,7 +94,7 @@ class BookIssuesTable
                     ->requiresConfirmation()
                     ->modalHeading('Return Book')
                     ->modalDescription('Are you sure you want to mark this book as returned?')
-                    ->visible(fn ($record) => $record->status === 'issued')
+                    ->visible(fn ($record) => $record->status === 'issued' || $record->status === 'overdue')
                     ->action(function ($record) {
                         // Update the record
                         $record->update([

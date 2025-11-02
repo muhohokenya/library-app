@@ -34,6 +34,7 @@ class BookIssueForm
                 DatePicker::make('issue_date')
                     ->required()
                     ->default(now())
+                    ->maxDate(now()->startOfDay())
                     ->minDate(now()->startOfDay())
                     ->native(false),
 
