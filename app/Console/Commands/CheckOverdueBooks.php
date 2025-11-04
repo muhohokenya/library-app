@@ -16,13 +16,14 @@ class CheckOverdueBooks extends Command
     public function handle(): int
     {
         $this->info('Checking for overdue books...');
+        $this->info('Current date: ' . Carbon::today()->toDateString());
 
         Log::info("Starting overdue books check");
 
-        // Get all issued books that are past due date
+        // Get all issued books that are past due date (including books due today)
         $overdueIssues = BookIssue::query()
             ->where('status', 'issued')
-            ->whereDate('due_date', '<', Carbon::today()) // Changed from subDay()
+            ->whereDate('due_date', '<=', Carbon::today()) // Changed from '<' to '<='
             ->whereDoesntHave('fine')
             ->get();
 
@@ -32,7 +33,14 @@ class CheckOverdueBooks extends Command
         $finesCreated = 0;
 
         foreach ($overdueIssues as $issue) {
-            $daysOverdue = Carbon::parse($issue->due_date)->diffInDays(Carbon::now());
+            $daysOverdue = Carbon::parse($issue->due_date)->diffInDays(Carbon::today());
+
+            // Only create fine if actually overdue (at least 1 day)
+            if ($daysOverdue < 1) {
+                $this->info("Issue #{$issue->id} is due today, skipping fine creation");
+                continue;
+            }
+
             $fineAmount = $daysOverdue * 10; // KES 10 per day
 
             Fine::query()->create([
@@ -43,8 +51,8 @@ class CheckOverdueBooks extends Command
             ]);
 
             $finesCreated++;
-            $this->info("Fine created for Issue #{$issue->id} - KES {$fineAmount}");
-            Log::info("Fine created for Issue #{$issue->id} - KES {$fineAmount}");
+            $this->info("Fine created for Issue #{$issue->id} - KES {$fineAmount} ({$daysOverdue} days overdue)");
+            Log::info("Fine created for Issue #{$issue->id} - KES {$fineAmount} ({$daysOverdue} days overdue)");
         }
 
         if ($finesCreated > 0) {
