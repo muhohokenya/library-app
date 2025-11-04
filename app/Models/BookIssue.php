@@ -50,4 +50,5 @@ class BookIssue extends Model
     {
         return $this->hasOne(Fine::class);
     }
+
 }

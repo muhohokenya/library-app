@@ -17,13 +17,17 @@ class CheckOverdueBooks extends Command
     {
         $this->info('Checking for overdue books...');
 
-        Log::write("info","This is a test");
+        Log::info("Starting overdue books check");
 
-        // Get all issued books that are past due date by 24+ hours
-        $overdueIssues = BookIssue::query()->where('status', 'issued')
-            ->whereDate('due_date', '<', Carbon::now()->subDay())
-            ->whereDoesntHave('fine') // Only books without existing fines
+        // Get all issued books that are past due date
+        $overdueIssues = BookIssue::query()
+            ->where('status', 'issued')
+            ->whereDate('due_date', '<', Carbon::today()) // Changed from subDay()
+            ->whereDoesntHave('fine')
             ->get();
+
+        $this->info("Found {$overdueIssues->count()} overdue books");
+        Log::info("Found {$overdueIssues->count()} overdue books");
 
         $finesCreated = 0;
 
@@ -39,11 +43,16 @@ class CheckOverdueBooks extends Command
             ]);
 
             $finesCreated++;
-            Log::write("info","Fine created for Issue". $issue->id." - KES ".$fineAmount);
+            $this->info("Fine created for Issue #{$issue->id} - KES {$fineAmount}");
+            Log::info("Fine created for Issue #{$issue->id} - KES {$fineAmount}");
         }
 
-        if ($finesCreated !== 0) {
-            Log::write("info","Total fines created: {$finesCreated}");
+        if ($finesCreated > 0) {
+            $this->info("Total fines created: {$finesCreated}");
+            Log::info("Total fines created: {$finesCreated}");
+        } else {
+            $this->info("No new fines created");
+            Log::info("No new fines created");
         }
 
         return 0;
